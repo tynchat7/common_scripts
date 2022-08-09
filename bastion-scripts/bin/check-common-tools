@@ -1,0 +1,78 @@
+#!/bin/bash
+## Color codes
+green="\033[0;32m"
+red="\033[0;31m"
+blue="\033[0;34m"
+magenta="\033[0;35m"
+yellow="\033[0;33m"
+cyan="\033[0;36m"
+reset="\033[0m"
+FOUND_ERROR=0
+
+##softcoded the Domain Name 
+if [[ -z "$DOMAIN"  ]]; then 
+    BASE_DOMAIN="$(gcloud dns managed-zones describe cluster-infrastructure-zone --format json | jq -r '.dnsName' | sed 's/.$//')"
+    echo "Getting the domain name automatically from the google DNS ${BASE_DOMAIN}"
+else
+    BASE_DOMAIN="${DOMAIN}"
+    echo "Found an environemnt variable <DOMAIN> using ${DOMAIN}"
+fi
+
+#sofcoded the IP
+if [[ -z "$IP"  ]]; then 
+    BASE_IP="$(kubectl get service -n tools | grep LoadBalancer | awk '{print $4}')"
+    echo "Getting IP automatically from the ingress controller ${BASE_IP}"
+else
+    BASE_IP="${IP}"
+    echo "Found an environemnt variable <IP> using ${IP}"
+fi
+
+## declare an array variable
+if [[ -z "$ENDPOINTS"  ]]; then 
+    declare -a arr=("jenkins.${BASE_DOMAIN}" "nexus.${BASE_DOMAIN}" "sonarqube.${BASE_DOMAIN}" "grafana.${BASE_DOMAIN}" "prometheus.${BASE_DOMAIN}" "vault.${BASE_DOMAIN}" "waypoint.${BASE_DOMAIN}")
+else
+    declare -a arr=($ENDPOINTS)
+    echo "Found an environment variable <ENDPOINTS> using it"
+fi
+
+## now loop through the above array
+for endpoint in "${arr[@]}"
+do
+    HTTP_CODE="$(curl -s -o /dev/null -v $BASE_IP -H "Host: ${endpoint}" -w '%{http_code}' -L 2>/dev/null )"
+
+    if [[ $HTTP_CODE == '403' ]]; then
+        echo -e "${yellow}WARNING: The host <${endpoint}> is not whitelisted, HTTP ERROR $HTTP_CODE ${reset}"
+
+    elif [[ $HTTP_CODE == '200' ]]; then
+        echo -e "${green}INFO: The host <${endpoint}> is up and running ${reset}"
+
+    elif [[ $HTTP_CODE == '307' ]]; then
+        echo -e "${cyan}Redirect: The host <${endpoint}> is redirecting, HTTP ERROR $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+
+    elif [[ $HTTP_CODE == '404' ]]; then
+        echo -e "${red}ERROR: The host <${endpoint}> is not found, HTTP ERROR $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+
+    elif [[ $HTTP_CODE == '401' ]]; then
+        echo -e "${red}ERROR: The host <${endpoint}> is unauthorized, HTTP ERROR  $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+
+    elif [[ $HTTP_CODE == '405' ]]; then
+        echo -e "${red}ERROR: The host <${endpoint}> is using a method that is not allowed, HTTP ERROR  $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+
+    elif [[ $HTTP_CODE == '500' ]]; then
+        echo -e "${red}ERROR: The host <${endpoint}> is experiencing an internal server error, HTTP ERROR  $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+    else 
+        echo -e "${red}ERROR: The host <${endpoint}> having following HTTP ERROR $HTTP_CODE ${reset}"
+        FOUND_ERROR=1
+    fi
+
+    sleep 2
+done
+
+#Exiting with the founded error codes:
+exit $FOUND_ERROR
+

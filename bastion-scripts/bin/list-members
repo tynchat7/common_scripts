@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source "$(which common-functions)"
+
+SELECTION="$1"
+grep -i "$SELECTION" /etc/passwd | awk -F ':' '{print $1}'

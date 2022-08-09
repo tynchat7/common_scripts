@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    for user in $(cat /etc/passwd| grep fuchicorp-scripts  | grep 'basic\|pro\|contributors' | awk -F ':' '{print $1}'); do
+        echo -e "\n## User $user ssh config"
+        echo "Host $user@bastion.fuchicorp.com"
+        echo "   Hostname bastion.fuchicorp.com"
+        echo "   User $user"
+    done
+else
+    for user in $(cat /etc/passwd| grep fuchicorp-scripts  | grep "$1" | awk -F ':' '{print $1}'); do
+        echo -e "\n## User $user ssh config"
+        echo "Host $user@bastion.fuchicorp.com"
+        echo "   Hostname bastion.fuchicorp.com"
+        echo "   User $user"
+    done
+fi
+

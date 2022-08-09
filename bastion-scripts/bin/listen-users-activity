@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+BASE_HOME_PATH="/fuchicorp/home"
+DEFAULT_HISTORY_PATH=".zsh_history"
+
+tailf "$BASE_HOME_PATH/$1/$DEFAULT_HISTORY_PATH"

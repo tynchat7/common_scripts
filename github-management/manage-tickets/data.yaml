@@ -1,0 +1,185 @@
+tickets:
+- title: '1. Install required packages on your local'
+  milestone: '1 Install packages'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Hello There,
+
+    Please install following packages into your local
+    1. Install vscode
+    2. vscode extenations
+      1. Remote share "Remote Explorer"
+      2. Live share 
+
+    3. Install lens to your local machine
+
+
+    https://github.com/fuchicorp/cluster-infrastructure/wiki/Lens-installation-to-local
+    https://code.visualstudio.com/download
+
+
+- title: '2. Deploy cluster to your own GCP account'
+  milestone: '2 Cluster Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Welcome to FuchiCorp! Please build your own cluster first and on top of that, 
+    you will need to deploy common tools. Please follow the README.md documentation 
+    of cluster infrastructure and deploy the cluster.
+
+    Documentation for cluster deployment:
+    https://github.com/fuchicorp/cluster-infrastructure/tree/master/kube-cluster
+
+    Video to deploy cluster:
+    https://academy.fuchicorp.com/videos/folders/watch/3c77d3522f2e52938bda90643aed3717d11ccee5'
+
+  
+
+- title: '3. Deploy common tools on top of your cluster'
+  milestone: '3 Common Tools Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Please deploy common tools on top of your cluster and make sure all tools are deployed
+    and up and running. After you have deployed everything you can check isitup to verify
+
+    IsItUp link: https://isitup.fuchicorp.com/
+
+    Please watch this video:
+    https://academy.fuchicorp.com/videos/folders/watch/0ee8c1ecda538e7769c895cd7c34f7033642ee27
+    https://academy.fuchicorp.com/videos/folders/watch/de409644e693eb3ca4386488164b1e3885efb0ba
+
+
+
+- title: '4. Jenkins Hello World Build and Deploy'
+  milestone: '4 Hello-world Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Please deploy the hello-world application to DEV, QA, STAGE, PROD environments. 
+    No source code changes are required you will need to just deploy to your cluster 
+
+      Helpful Documentation:
+      https://github.com/fuchicorp/jenkins-global-library/blob/master/README.md
+
+    Steps
+    - [ ] Navigate to your Jenkins server
+    - [ ] Create a multi-branch pipeline with following configs
+      1. The job type is a multi branch
+      2. The job name  `hello-world-build`
+      3. include discovering tags feature
+      4. Select your credentials to pull the source code
+      5. Source code refers to `https://github.com/fuchicorp/hello-world/`
+      6. Jenkins file should be `JenkinsBuilder.groovy`
+    - [ ] Create a regular pipeline to deploy the app
+      1. The job type pipeline
+      2. The job name  `hello-world-deploy`
+      3. Source code refer to `https://github.com/fuchicorp/hello-world/`
+      4. Select your credentials to pull the source code
+      5. Select branch `main` 
+      6. Script path should be `JenkinsDeployer.groovy`
+    - [ ] After you have to build and deployed jobs start deploying to multiple environments
+    - [ ] Check your cluster and make sure DEV, QA, STAGE, PROD up and running
+    - [ ] Go to the isitup application and confirm everything looks good [LINK TO ISITUP](https://isitup.fuchicorp.com/)
+
+
+- title: '5. Learn basic bash scripting'
+  milestone: '5 Bash scripting tasks'
+  labels: [
+  'basic'
+  ]
+  body: |
+    This is new implementation you might have some problems and feel free to reach out instructors and mentors. In this task you have `bash-task`command to test all your bash scripts. You will need to use `shellcheck` command to check your scripts syntaxes
+
+    Steps
+    - [ ] Create a folder in your home directory `~/bash_scripts`
+    - [ ] Follow the documentation [LINK](https://github.com/fuchicorp/main/wiki/FuchiCorp-Basic-group-bash-scripting) 
+    - [ ] Make sure you read the all requirements
+    - [ ] For each task apply `shellchek ~/bash_scripts/taskX.sh` 
+    - [ ] After you are done with all tasks run command `menu` and select `bash-task` 
+  
+
+- title: '6. Deploy Bastion Host and test that all package are installed'
+  milestone: '6 Bastion Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Please deploy your own bastion host following the instructions to build the packer image first. 
+    Please ensure all packages in the packer image are installed and working. This can be done by verifying the version.
+
+    Build Packer image first. Follow the README.md https://github.com/fuchicorp/bastion/blob/master/packer-scripts/README.md
+
+    Deploy your own Bastion with the Packer image you created. Follow the README.md 
+    https://github.com/fuchicorp/bastion/blob/master/README.md
+
+    Login into your bastion and verify packages are installed. Docker, Helm, Python, and Terraform.
+    Once verify your can destroy your bastion
+
+    Helpful link on how to access bastion host:
+    https://academy.fuchicorp.com/videos/folders/watch/f276205e8fc46b37534bb79a3409b9663066221a
+
+
+
+- title: '7. Deploy Elastic Search and Kibana ELK'
+  milestone: '7 ELK Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Please deploy ELK to your cluster. You will find the source code located in the Elk-stack repo in FuchiCorp:
+    https://github.com/fuchicorp/elk-stack. Please follow the README.md to deploy: https://github.com/fuchicorp/elk-stack/blob/master/README.md .
+
+    Once you have deployed successfully, please add screenshots of both Kibana and Elastic-search to 
+    the comments in your ticket for management approval.
+
+
+
+- title: '8. Deploy Rancher on top of your cluster'
+  milestone: '8 Rancher Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    In this task you will need to enable and deploy the rancher so we can compare with lens. Please navigate to the common_tools with release `v0.0.8` repo and enable the rancher
+
+    Docs
+    https://github.com/fuchicorp/common_tools/tree/v0.0.8
+
+    Steps
+    - [ ] Navigate to the `~/common_tools` 
+    - [ ] Make sure you are using release `v0.0.8`
+    - [ ] Update your `common_tools.tfvars`to enable the rancher
+    - [ ] Run the deployment
+    - [ ] Make sure `rancher.domain.com` is up and running
+  
+
+
+
+- title: '9. Deploy an Application with Jenkins'
+  milestone: '9 App Deployment'
+  labels: [
+  'basic'
+  ]
+  body: |
+    Please deploy your choice of ONE application to all environments (DEV, QA, STAGE and PROD) from scratch. You will need to dockerize, create a helm chart, terraform module and lastly Jenkins groovy files for your application. 
+
+    Steps:
+    - [ ] Go to the App Repo https://github.com/fuchicorp/apps and clone it
+    - [ ] Choose ONE application  (barter, cramis, food-market, json-viewer, node-hello, or react-hello)
+    - [ ] Create your own PRIVATE repo on your github account. Copy ONE application folder from app repo to your repo. 
+    - [ ] Dockerize the files in that folder. Build and test that docker image
+    - [ ] Create a helm chart to deploy your application. Deploy and ensure it works correctly and
+    - [ ] you can view the image at the URL you specified.
+    - [ ] Create a terraform module and ensure the helm chart is soft coded.
+    - [ ] Use the groovy files from hello-world to help create pipelines and deploy your application with your Jenkins.
+    - [ ] Deploy your application with Jenkins to all environments (DEV, QA, STAGE and PROD). 
+    - [ ] Once this is complete, provide your URLs to your application in your ticket for instructors to check.
+
+    Helpful Videos:
+    Hello-world deployment: https://academy.fuchicorp.com/videos/folders/watch/af0208a2a6b38a23cd2252e7f555b667e2440561

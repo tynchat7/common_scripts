@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+
+CURRENT_TF_VERSION="$(terraform version  | awk '{print $2}' | head -n1)"
+echo "You are using the terraform version ${CURRENT_TF_VERSION}"
+if [[ $CURRENT_TF_VERSION != "v0.13.7" ]]; then
+  echo """${red}
+################################################################################################
+##   You are using non supported terraform version!!                                          ## 
+##   for this project you need to use <v0.13.7> terraform version                             ##
+##   Please run the ${yellow}tfswitch -l${red} command to change the terraform version                       ##
+################################################################################################
+    ${reset}"""
+    return 1
+fi

@@ -1,0 +1,57 @@
+#!/bin/bash 
+## Getting all the variables
+source "$(which set-colors)"
+
+## Following function used to print all outputs
+function logger() {
+    if [[ $DEBUG == 'true' ]]; then
+        echo -e "⚠️${BLUE}  The script is running in the debug mode!!!${RESET}"
+        echo -e  "⚠️${YELLOW}  $1${RESET}"
+
+    else
+        if [[ $2 == 'success' ]]; then
+            echo -e "✅${GREEN}  $1${RESET}"
+
+        elif [[ $2 == 'warning' ]]; then 
+            echo -e "⚠️${YELLOW}  $1${RESET}"
+
+        elif [[ $2 == 'info' ]]; then 
+            echo -e "${BLUE}$1${RESET}"
+
+        elif [[ $2 == 'error' ]]; then 
+            echo -e "❌${RED}  $1${RESET}"
+        else
+            echo -e "${GREEN}  $1${RESET}"
+        fi
+
+    fi
+}
+
+
+## Using this function you should be able to test any task and use the logger function to print
+function custom_shell_check() {
+    SHELL_CHECK_RESULT="$(shellcheck "$1")"
+    if [[ $? == 0 ]]; then
+        logger 'Testing the syntax of the <task4.sh> successfully done' 'success'
+    else
+        logger "$SHELL_CHECK_RESULT" 'error'
+    fi
+}
+
+## Progress overview for the user
+function progress() {
+    {
+    for ((i = 0 ; i <= 100 ; i+=5)); do
+        sleep 0.2
+        echo $i
+    done
+    } | whiptail --gauge "Please wait while we are sleeping..." 6 50 0
+}
+
+## Fucntion to cancel the script anytime 
+function cancel_the_script() {
+    if [[ -z "$1" ]]; then
+        logger 'The script was canceled by user!!' 'warning'
+        exit 1
+    fi 
+}
